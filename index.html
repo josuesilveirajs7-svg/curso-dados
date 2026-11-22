@@ -174,6 +174,32 @@ footer.ft{margin-top:50px;color:var(--muted);font-size:13px;text-align:center}
 .out img.pyfig{display:block;max-width:100%;height:auto;margin:8px 0;background:#fff;border-radius:8px;border:1px solid var(--line, #ddd)}
 .webframe{width:100%;border:1px solid var(--line,#ddd);border-radius:8px;background:#fff;height:200px;margin:4px 0 8px;resize:vertical}
 .webcons .werr{color:#dc2626}.webcons .wwarn{color:#b45309}
+
+/* cena de entrada */
+.intro{position:relative;overflow:hidden;display:grid;grid-template-columns:1.3fr 1fr;gap:28px;align-items:center;margin:4px 0 26px;padding:34px 32px;border-radius:20px;color:#e8f3f1;
+  background:radial-gradient(120% 140% at 100% 0%,#134e4a 0%,transparent 55%),radial-gradient(90% 120% at 0% 100%,#1e3a8a 0%,transparent 60%),#0b1220;box-shadow:0 18px 40px -22px rgba(2,6,23,.7)}
+.intro::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:28px 28px;pointer-events:none}
+.intro-txt{position:relative;z-index:1}
+.intro-tag{display:inline-block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#5eead4;background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.3);padding:4px 10px;border-radius:999px}
+.intro h1{font-size:clamp(28px,4.6vw,42px);line-height:1.12;margin:14px 0 10px;color:#fff;letter-spacing:-.02em}
+.intro h1 span{background:linear-gradient(90deg,#5eead4,#fde047);-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro p{color:#b6c6cf;font-size:16.5px;max-width:520px;margin:0 0 18px}
+.intro-cta{display:flex;flex-wrap:wrap;gap:10px}
+.intro .btn.pri{background:#2dd4bf;color:#042f2e;border-color:#2dd4bf;font-weight:600}
+.intro .btn.ghost{background:transparent;color:#e8f3f1;border:1px solid rgba(255,255,255,.25)}
+.intro-num{display:flex;gap:26px;margin-top:22px}
+.intro-num b{display:block;font-size:24px;color:#fff;line-height:1.1}
+.intro-num span{font-size:12.5px;color:#8fa3ad}
+.intro-viz{position:relative;z-index:1}
+.intro-bars{display:flex;align-items:flex-end;gap:7px;height:170px;padding:14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.intro-bars i{flex:1;height:var(--h);border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,var(--c),color-mix(in srgb,var(--c) 35%,transparent));transform-origin:bottom;animation:sobe .9s cubic-bezier(.2,.8,.2,1) var(--d) both}
+@keyframes sobe{from{transform:scaleY(0);opacity:0}to{transform:scaleY(1);opacity:1}}
+.intro-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.intro-chips span{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:6px;color:#fff;background:color-mix(in srgb,var(--c) 70%,#0b1220)}
+@media (max-width:720px){.intro{grid-template-columns:1fr;padding:26px 20px}.intro-bars{height:110px}.intro-num{gap:18px}}
+@media (prefers-reduced-motion:reduce){.intro-bars i{animation:none}}
+footer.assin{text-align:center;font-size:11.5px;color:var(--muted);opacity:.65;padding:26px 0 18px;letter-spacing:.02em}
+@media print{.intro-viz{display:none}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0f766e">
@@ -195,7 +221,7 @@ footer.ft{margin-top:50px;color:var(--muted);font-size:13px;text-align:center}
 <div class="wrap">
   <aside class="side" id="side"></aside>
   <div class="scrim" id="scrim"></div>
-  <main><div class="page" id="page"></div></main>
+  <main><div class="page" id="page"></div><footer class="assin">Desenvolvido por Josué Silveira</footer></main>
 </div>
 <script>
 // ===== PLANO COMPLETO DO CURSO =====
@@ -16800,10 +16826,21 @@ function renderHome(page){
   // só ter aberto uma aula não conta. Depois de apagar o progresso, volta sempre ao "Começar".
   const temProgresso = Object.keys(S.done).length > 0 || Object.keys(S.quiz).length > 0;
   const last = temProgresso && S.last && IDX[S.last];
-  page.innerHTML = `<div class="hero"><h1>Curso Completo de Análise de Dados</h1>
-  <p>Do zero ao nível especialista em SQL, Power BI, Excel, Python, IA aplicada, Estatística, HTML, CSS e JavaScript. Tudo com exemplos de almoxarifado, testes e exercícios práticos.</p>
-  ${last ? `<p><a class="btn pri" href="#${last.id}">Continuar: ${esc(last.titulo)} →</a></p>` : `<p><a class="btn pri" href="#sql-b-1">Começar pela primeira aula de SQL →</a></p>`}</div>
-  <h2>Escolha o que estudar</h2>
+  const totAulas = TRILHAS.reduce((s, t) => s + FLAT[t.id].length, 0);
+  const totFeitas = TRILHAS.reduce((s, t) => s + prog(t.id).d, 0);
+  const pctGeral = totAulas ? Math.round(totFeitas * 100 / totAulas) : 0;
+  const barras = TRILHAS.map((t, i) => `<i style="--c:${t.cor};--h:${30 + ((i * 37) % 60)}%;--d:${i * 0.09}s"></i>`).join('');
+  page.innerHTML = `<section class="intro">
+    <div class="intro-txt">
+      <span class="intro-tag">Do zero ao especialista</span>
+      <h1>Curso Completo de<br><span>Análise de Dados</span></h1>
+      <p>SQL, Power BI, Excel, Python, IA, Estatística, HTML, CSS e JavaScript, com exemplos reais de almoxarifado, exercícios corrigidos na hora e aulas em áudio.</p>
+      <div class="intro-cta">${last ? `<a class="btn pri" href="#${last.id}">Continuar: ${esc(last.titulo)} →</a>` : `<a class="btn pri" href="#sql-b-1">Começar agora →</a>`}<a class="btn ghost" href="#trilhas">Ver trilhas</a></div>
+      <div class="intro-num"><div><b>${TRILHAS.length}</b><span>trilhas</span></div><div><b>${totAulas}</b><span>itens de estudo</span></div><div><b>${pctGeral}%</b><span>concluído</span></div></div>
+    </div>
+    <div class="intro-viz" aria-hidden="true"><div class="intro-bars">${barras}</div><div class="intro-chips">${TRILHAS.map(t => `<span style="--c:${t.cor}">${t.sigla}</span>`).join('')}</div></div>
+  </section>
+  <h2 id="trilhas">Escolha o que estudar</h2>
   <div class="grid">${TRILHAS.map(t => { const p = prog(t.id); const r = FLAT[t.id].filter(x => ready(x.id)).length; return `<a class="card" href="#${t.id}" style="--c:${t.cor}"><div class="sg">${t.sigla}</div><h3>${esc(t.nome)}</h3><p>${esc(t.desc)}</p><div class="pc">${r ? `${r} de ${FLAT[t.id].length} itens disponíveis` : 'Plano pronto · aulas em produção'} · ${p.p}% concluído</div><div class="bar"><i style="width:${p.p}%"></i></div></a>`; }).join('')}</div>
   <h2>Ordem recomendada</h2>
   <div class="box"><ol class="steps">
