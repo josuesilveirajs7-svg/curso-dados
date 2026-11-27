@@ -1,7 +1,7 @@
 {
   "name": "Curso Completo de Análise de Dados",
   "short_name": "Curso Dados",
-  "description": "Excel, SQL, Power BI, Python, Estatística, HTML, CSS, JavaScript e IA — com exercícios, provas e áudio.",
+  "description": "Excel, SQL, Power BI, Python, Estatística, Machine Learning, HTML, CSS, JavaScript e IA — com exercícios, laboratórios, provas e áudio.",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",
